@@ -42,6 +42,7 @@ def replace_name_by_digits(ligne):
     print(ligne)
     digits = []
     nums_found = []
+    overlap = False
     for num in digitnames.keys():
         start_idx = ligne.find(num)
         if start_idx == -1:
@@ -50,11 +51,16 @@ def replace_name_by_digits(ligne):
         digits.append(start_idx)
         digits.append(end_idx)
         nums_found.append(num)
-    print(digits)
-    print(nums_found)
+     
     if len(digits) != len(set(digits)):
         overlap = True
-        print('Overlap')
+        
+    for num in nums_found:
+        if overlap:
+            ligne = ligne.replace(num[:-1], str(digitnames[num]))
+        else:
+            ligne = ligne.replace(num, str(digitnames[num]))
+    print(ligne)
 
         
 
