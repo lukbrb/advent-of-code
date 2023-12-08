@@ -1,7 +1,7 @@
 with open('input') as f:
     lines = f.readlines()
 
-
+# Note: le type str a déjà une méthode 'is_digit()'
 def is_digit(item):
     try:
         int(item)  # pas besoin de le changer en int, pour pouvoir concatener à la fin
@@ -10,12 +10,12 @@ def is_digit(item):
         return False
 
 def extract_line_digit(ligne):
-    digits = []
+    some_digits = []
     for item in ligne:
         if is_digit(item):
-            digits.append(item)
-    if digits:  # si liste non vide
-        value = digits[0] + digits[-1]
+            some_digits.append(item)
+    if some_digits:  # si liste non vide
+        value = some_digits[0] + some_digits[-1]
     else: value = 0
     return int(value)
 
@@ -39,31 +39,41 @@ digitnames = {
 }
 
 def replace_name_by_digits(ligne):
-    print(ligne)
     digits = []
     nums_found = []
     overlap = False
-    for num in digitnames.keys():
-        start_idx = ligne.find(num)
+    for key, num in digitnames.items():
+        start_idx = ligne.find(key)
         if start_idx == -1:
             continue
-        end_idx = start_idx + len(num)
+        end_idx = start_idx + len(key)
         digits.append(start_idx)
         digits.append(end_idx)
-        nums_found.append(num)
+        nums_found.append(key)
      
     if len(digits) != len(set(digits)):
         overlap = True
         
     for num in nums_found:
         if overlap:
-            ligne = ligne.replace(num[:-1], str(digitnames[num]))
+            ligne = ligne.replace(ligne[start_idx:end_idx], str(num))
         else:
-            ligne = ligne.replace(num, str(digitnames[num]))
-    print(ligne)
+            ligne = ligne.replace(key, str(num))
+    return ligne.strip()
 
-        
 
+# def replace_name_by_digits(ligne):
+#     for key, val in digitnames.items():
+#         if key in ligne:
+#             ligne = ligne.replace(key, str(val)).strip()
+
+#     return ligne
+
+somme = 0
 for line in lines:
-    replace_name_by_digits(line)
+    print(line.strip())
 
+    line = replace_name_by_digits(line)
+    print(line)
+    # somme += extract_line_digit(line)
+# print(somme)
