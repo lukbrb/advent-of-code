@@ -9,23 +9,6 @@ def is_digit(item):
     except Exception as e:
         return False
 
-def extract_line_digit(ligne):
-    some_digits = []
-    for item in ligne:
-        if is_digit(item):
-            some_digits.append(item)
-    if some_digits:  # si liste non vide
-        value = some_digits[0] + some_digits[-1]
-    else: value = 0
-    return int(value)
-
-
-def solve_part1():
-    somme = 0
-    for line in lines:
-        somme += extract_line_digit(line)
-    print(somme)
-
 digitnames = {
     'one': 1,
     'two': 2,
@@ -38,42 +21,26 @@ digitnames = {
     'nine': 9,
 }
 
-def replace_name_by_digits(ligne):
-    digits = []
-    nums_found = []
-    overlap = False
-    for key, num in digitnames.items():
-        start_idx = ligne.find(key)
-        if start_idx == -1:
-            continue
-        end_idx = start_idx + len(key)
-        digits.append(start_idx)
-        digits.append(end_idx)
-        nums_found.append(key)
-     
-    if len(digits) != len(set(digits)):
-        overlap = True
-        
-    for num in nums_found:
-        if overlap:
-            ligne = ligne.replace(ligne[start_idx:end_idx], str(num))
-        else:
-            ligne = ligne.replace(key, str(num))
-    return ligne.strip()
+
+def extract_line_digit(ligne):
+    some_digits = []
+    for i, item in enumerate(ligne):
+        if is_digit(item):
+            some_digits.append(item)
+        for key, val in digitnames.items():
+            if ligne[i:].startswith(key):
+                some_digits.append(str(val))
+    if some_digits:  # si liste non vide
+        value = some_digits[0] + some_digits[-1]
+    else: value = 0
+    return int(value)
 
 
-# def replace_name_by_digits(ligne):
-#     for key, val in digitnames.items():
-#         if key in ligne:
-#             ligne = ligne.replace(key, str(val)).strip()
+def solve_part1():
+    somme = 0
+    for line in lines:
+        somme += extract_line_digit(line)
+    print(somme)
 
-#     return ligne
 
-somme = 0
-for line in lines:
-    print(line.strip())
-
-    line = replace_name_by_digits(line)
-    print(line)
-    # somme += extract_line_digit(line)
-# print(somme)
+solve_part1()
